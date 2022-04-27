@@ -3,7 +3,7 @@ import { config } from 'dotenv'
 
 config()
 
-export class BaseDataBase {
+export abstract class BaseDataBase {
 
     protected static connection: Knex | null = null
 
@@ -22,5 +22,12 @@ export class BaseDataBase {
         }
 
         return BaseDataBase.connection
+    }
+
+    public static async destroyConnection(): Promise<void> {
+        if (BaseDataBase.connection) {
+          await BaseDataBase.connection.destroy();
+          BaseDataBase.connection = null;
+        }
     }
 }
