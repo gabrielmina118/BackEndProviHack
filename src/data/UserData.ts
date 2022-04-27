@@ -1,13 +1,21 @@
+import { UserInputData } from "../model/types";
 import { BaseDataBase } from "./BaseDatabase";
 
 export class UserData extends BaseDataBase {
 
     private static TABLE_NAME = "users"
 
-    async getUser() {
+    async createUser(input: UserInputData) {
+        const { id, name, email, password } = input
+
         try {
-            const result = await this.getConnection().select('*').from('usuario_cubo')
-            return result
+            await this.getConnection().insert({
+                id,
+                name,
+                email,
+                password
+            })
+            .into(UserData.TABLE_NAME)
         } catch (error) {
             if (error instanceof Error) {
                 throw new Error(error.message)
