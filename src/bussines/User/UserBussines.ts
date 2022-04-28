@@ -4,7 +4,7 @@ import { Authenticator } from "../../services/Authenticator"
 import { HashManager } from "../../services/HashManager"
 import { IdGenerator } from "../../services/IdGenerator"
 import { InvalidCredentials, InvalidEmail } from "../../error/invalidCredentials"
-import { PasswordShort } from "../../error/generalError"
+import { PasswordShort, EmailExists } from "../../error/generalError"
 import { MissingFields } from "../../error/missingFields"
 import { UserNotFound } from "../../error/notFound"
 
@@ -17,13 +17,20 @@ export class UserBussines {
     ) { }
 
     async createUser(input: UserInputDTO) {
+        const userData = new UserData()
+
+        const userExist = await userData.searchUser(input.email)
+        if(userExist[0]){
+            throw new EmailExists()
+        }
+
 
         // Nao esta retornando para o front a mensagem de erro
-        Object.keys(input).forEach(function (item) {
-            if (!input[item]) {
-                throw new Error(`Field is missing -> ${item}`)
-            }
-        })
+        // Object.keys(input).forEach(function (item) {
+        //     if (!input[item]) {
+        //         throw new Error(`Field is missing -> ${item}`)
+        //     }
+        // })
 
         const verification = /^([\w\.\-_]+)?\w+@[\w-_]+(\.\w+){1,}$/
         const ok = verification.exec(input.email)
@@ -45,8 +52,8 @@ export class UserBussines {
             password
         }
 
-        const userData = new UserData()
-        userData.createUser(insertUser)
+        
+        await userData.createUser(insertUser)
         return "User Created Successfully!"
     }
 
