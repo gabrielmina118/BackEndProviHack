@@ -5,7 +5,7 @@ export class UserData extends BaseDataBase {
 
     private static TABLE_NAME = "users"
 
-    async createUser(input: UserInputData) {
+    async createUser(input: UserInputData): Promise<void> {
         const { id, name, email, password } = input
 
         try {

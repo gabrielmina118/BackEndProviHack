@@ -42,13 +42,19 @@ export class UserBussines {
     
         const userData = new UserData()
         const [user] = await userData.login(email);
-    
-        const hashManager = new HashManager()
-        const passwordIsCorrect: boolean =
-          user && hashManager.compare(password, user.password);
-    
-        if (!user || !passwordIsCorrect) {
+
+        if (!user) {
             throw new Error("User not found")
+        }
+    
+        const passwordIsCorrect: boolean =
+          user && await this.hashmanager.compare(password, user.password);
+
+        
+        console.log(passwordIsCorrect)
+        
+        if (!passwordIsCorrect) {
+            throw new Error("Password incorrect")
         }
     
         const authenticator = new Authenticator()
