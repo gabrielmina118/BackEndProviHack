@@ -20,9 +20,9 @@ export class UserController {
             }
 
             const userBussines = new UserBussines(new IdGenerator,new HashManager)
-            userBussines.createUser(input)
+            const message = await userBussines.createUser(input)
 
-            res.status(201).send({message:"User Created Successfully!"})
+            res.status(201).send({message: message})
 
         } catch (error) {
             if (error instanceof Error) {
@@ -42,7 +42,7 @@ export class UserController {
           const userBussines = new UserBussines(new IdGenerator,new HashManager)
           const token = await userBussines.login(email, password);
     
-          res.status(200).send({ token });
+          res.status(200).send({message: token });
         } catch (error: any) {
           res.status(400).send({
             message: error.message,
