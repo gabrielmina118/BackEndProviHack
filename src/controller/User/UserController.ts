@@ -3,6 +3,7 @@ import { UserBussines } from "../../bussines/User/UserBussines";
 import { UserInputDTO } from "../../model/types";
 import { HashManager } from "../../services/HashManager";
 import { IdGenerator } from "../../services/IdGenerator";
+import { BaseDataBase } from "../../data/BaseDatabase";
 
 
 export class UserController {
@@ -29,6 +30,25 @@ export class UserController {
             } else {
                 res.status(400).send({ message: "Unexpected Error !" })
             }
+        } finally {
+            await BaseDataBase.destroyConnection();
+        }
+    }
+
+    async login(req: Request, res: Response): Promise<void> {
+        try {
+          const { email, password } = req.body;
+
+          const userBussines = new UserBussines(new IdGenerator,new HashManager)
+          const token = await userBussines.login(email, password);
+    
+          res.status(200).send({ token });
+        } catch (error: any) {
+          res.status(400).send({
+            message: error.message,
+          });
+        } finally {
+          await BaseDataBase.destroyConnection();
         }
     }
 }

@@ -25,5 +25,18 @@ export class UserData extends BaseDataBase {
         }
     }
 
+    public async login(email: string): Promise<any> {
+        try {
+          const user = await this.getConnection()
+            .select()
+            .from(UserData.TABLE_NAME)
+            .where({ email });
+       
+          return user;
+        } catch (error: any) {
+          throw new Error(error.sqlMessage || error.message);
+        }
+      }
+
 
 }

@@ -1,11 +1,14 @@
 import * as bcrypt from 'bcryptjs'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export class HashManager{
 
     public async hashCreate(pass:string):Promise<string>{
-        const rounds = 12;
-        const salt = await bcrypt.genSalt(rounds);
-        const result = await bcrypt.hash(pass, salt);
+        const rounds:number = Number(process.env.COST);
+        const salt:string = await bcrypt.genSalt(rounds);
+        const result:string = await bcrypt.hash(pass, salt);
         return result;
     }
 
