@@ -51,10 +51,11 @@ export class UserBussines {
         const id = this.idGenerator.generateId()
 
         if(input.typeUser.toUpperCase() === "CPF"){
-            const insertUserCPF =  new UserCpf(id,input.name,input.email,input.password,input.typeUser)
+            const insertUserCPF =  new UserCpf(id,input.name,input.email,password,input.typeUser)
             await userData.createUser(insertUserCPF)
         }else{
-            const insertUserCNPJ =  new UserCnpj(id,input.name,input.email,input.password,input.typeUser)
+            const insertUserCNPJ =  new UserCnpj(id,input.name,input.email,password,input.typeUser)
+
             await userData.createUser(insertUserCNPJ)
         }
         
