@@ -7,6 +7,8 @@ import { InvalidCredentials, InvalidEmail } from "../../error/invalidCredentials
 import { PasswordShort, EmailExists } from "../../error/generalError"
 import { MissingFields } from "../../error/missingFields"
 import { UserNotFound } from "../../error/notFound"
+import { UserCpf } from "../../model/UserCpfModel"
+import { UserCnpj } from "../../model/UserCnpjMode"
 
 
 export class UserBussines {
@@ -19,18 +21,16 @@ export class UserBussines {
     async createUser(input: UserInputDTO) {
         const userData = new UserData()
 
-        const userExist = await userData.searchUser(input.email)
-        if(userExist[0]){
+        const [userCPFExist,userCNPJExist] = await userData.searchUser(input.email)
+        if(userCPFExist[0] || userCNPJExist[0]){
             throw new EmailExists()
         }
 
-
-        // Nao esta retornando para o front a mensagem de erro
-        // Object.keys(input).forEach(function (item) {
-        //     if (!input[item]) {
-        //         throw new Error(`Field is missing -> ${item}`)
-        //     }
-        // })
+        Object.keys(input).forEach(function (item) {
+            if (!input[item]) {
+                throw new Error(`Field is missing '${item.toUpperCase()}'`)
+            }
+        })
 
         const verification = /^([\w\.\-_]+)?\w+@[\w-_]+(\.\w+){1,}$/
         const ok = verification.exec(input.email)
@@ -45,15 +45,16 @@ export class UserBussines {
 
         const password = await this.hashmanager.hashCreate(input.password)    
 
-        const insertUser: UserInputData = {
-            id: this.idGenerator.generateId(),
-            name: input.name,
-            email: input.email,
-            password
-        }
+        const id = this.idGenerator.generateId()
 
+        if(input.typeUser.toUpperCase() === "CPF"){
+            const insertUserCPF =  new UserCpf(id,input.name,input.email,input.password,input.typeUser)
+            await userData.createUser(insertUserCPF)
+        }else{
+            const insertUserCNPJ =  new UserCnpj(id,input.name,input.email,input.password,input.typeUser)
+            await userData.createUser(insertUserCNPJ)
+        }
         
-        await userData.createUser(insertUser)
         return "User Created Successfully!"
     }
 

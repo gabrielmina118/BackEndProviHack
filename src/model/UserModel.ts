@@ -1,14 +1,23 @@
-export class User {
+export abstract class User {
+
     constructor(
         private id: string,
-        private name: string,
         private email: string,
-        private password: string,
+        private password: string
     ) { }
 
-    static userModel(user: User) {
-        return new User(user.id, user.name, user.email, user.password)
+    getId(){
+        return this.id
+    }
+
+    getEmail(){
+        return this.email
+    }
+
+    getPassword(){
+        return this.password
     }
 }
+
 
 
