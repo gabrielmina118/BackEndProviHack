@@ -11,18 +11,19 @@ export class UserController {
     async createUser(req: Request, res: Response) {
         try {
 
-            const {name,email,password} = req.body;
+            const { name, email, password, typeUser } = req.body;
 
-            const input:UserInputDTO ={
+            const input: UserInputDTO = {
                 name,
                 email,
-                password
+                password,
+                typeUser
             }
 
-            const userBussines = new UserBussines(new IdGenerator,new HashManager)
+            const userBussines = new UserBussines(new IdGenerator, new HashManager)
             const message = await userBussines.createUser(input)
 
-            res.status(201).send({message: message})
+            res.status(201).send({ message: message })
 
         } catch (error) {
             if (error instanceof Error) {
@@ -37,18 +38,18 @@ export class UserController {
 
     async login(req: Request, res: Response): Promise<void> {
         try {
-          const { email, password } = req.body;
+            const { email, password } = req.body;
 
-          const userBussines = new UserBussines(new IdGenerator,new HashManager)
-          const token = await userBussines.login(email, password);
-    
-          res.status(200).send({message: token });
+            const userBussines = new UserBussines(new IdGenerator, new HashManager)
+            const token = await userBussines.login(email, password);
+
+            res.status(200).send({ token });
         } catch (error: any) {
-          res.status(400).send({
-            message: error.message,
-          });
+            res.status(400).send({
+                message: error.message,
+            });
         } finally {
-          await BaseDataBase.destroyConnection();
+            await BaseDataBase.destroyConnection();
         }
     }
 

@@ -1,21 +1,38 @@
-import { UserInputData } from "../model/types";
+import { UserCnpj } from "../model/UserCnpjMode";
+import { UserCpf } from "../model/UserCpfModel";
+import { User } from "../model/UserModel";
 import { BaseDataBase } from "./BaseDatabase";
 
 export class UserData extends BaseDataBase {
-  private static TABLE_NAME = "users";
+  private static TABLE_NAME_CPF = "userCpf";
+  private static TABLE_NAME_CNPJ = "userCnpj";
 
-  async createUser(input: UserInputData): Promise<void> {
-    const { id, name, email, password } = input;
+  async createUser(input: User): Promise<void> {
 
     try {
-      await this.getConnection()
+
+      if(input instanceof UserCpf){
+
+        await this.getConnection()
         .insert({
-          id,
-          name,
-          email,
-          password,
+          id : input.getId(),
+          name:input.getName(),
+          email:input.getEmail(),
+          password:input.getPassword(),
         })
-        .into(UserData.TABLE_NAME);
+        .into(UserData.TABLE_NAME_CPF);
+
+      }else if(input instanceof UserCnpj){
+        await this.getConnection()
+        .insert({
+          id : input.getId(),
+          socialName:input.getSocialName(),
+          email:input.getEmail(),
+          password:input.getPassword(),
+        })
+        .into(UserData.TABLE_NAME_CNPJ);
+      }
+      
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
@@ -27,12 +44,17 @@ export class UserData extends BaseDataBase {
 
   public async login(email: string): Promise<any> {
     try {
-      const user = await this.getConnection()
+      const userCPF = await this.getConnection()
         .select()
-        .from(UserData.TABLE_NAME)
+        .from(UserData.TABLE_NAME_CPF)
         .where({ email });
 
-      return user;
+        const userCNPJ = await this.getConnection()
+        .select()
+        .from(UserData.TABLE_NAME_CNPJ)
+        .where({ email });
+
+      return [userCNPJ,userCPF];
     } catch (error: any) {
       throw new Error(error.sqlMessage || error.message);
     }
@@ -40,12 +62,17 @@ export class UserData extends BaseDataBase {
 
   public async searchUser(email: string): Promise<any> {
     try {
-      const user = await this.getConnection()
+      const userCNPJ = await this.getConnection()
         .select()
-        .from(UserData.TABLE_NAME)
+        .from(UserData.TABLE_NAME_CNPJ)
         .where({ email });
 
-      return user;
+        const userCPF = await this.getConnection()
+        .select()
+        .from(UserData.TABLE_NAME_CPF)
+        .where({ email });
+
+      return [userCPF,userCNPJ];
     } catch (error: any) {
       throw new Error(error.sqlMessage || error.message);
     }
