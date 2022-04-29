@@ -70,24 +70,47 @@ export class UserBussines {
         const userData = new UserData()
         const [userCNPJ ,userCPF] = await userData.login(email);
       
-        let user = userCPF[0]
-
-        const passwordIsCorrect: boolean =
-          user && await this.hashmanager.compare(password, user.password);
-
-
-        if (!passwordIsCorrect) {
-            throw new InvalidCredentials()
+        
+        if(userCNPJ[0]){
+            let user = userCNPJ[0]
+            const passwordIsCorrect: boolean =
+              user && await this.hashmanager.compare(password, user.password);
+    
+    
+            if (!passwordIsCorrect) {
+                throw new InvalidCredentials()
+            }
+            
+    
+            const authenticator = new Authenticator()
+            const token = authenticator.generateToken({
+              id: user.id,
+              role: user.role,
+            });
+        
+            return token;
+        } else if(userCPF[0]){
+            let user = userCPF[0]
+            const passwordIsCorrect: boolean =
+              user && await this.hashmanager.compare(password, user.password);
+    
+    
+            if (!passwordIsCorrect) {
+                throw new InvalidCredentials()
+            }
+            
+    
+            const authenticator = new Authenticator()
+            const token = authenticator.generateToken({
+              id: user.id,
+              role: user.role,
+            });
+        
+            return token;
+        } else {
+            throw new Error("user doesn't exist")
         }
         
-
-        const authenticator = new Authenticator()
-        const token = authenticator.generateToken({
-          id: user.id,
-          role: user.role,
-        });
-    
-        return token;
       }
 
       async searchCompanies(token:string, category: any) {
