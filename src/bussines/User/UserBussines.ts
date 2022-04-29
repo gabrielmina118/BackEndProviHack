@@ -66,28 +66,51 @@ export class UserBussines {
         if (!email || !password) {
           throw new MissingFields()
         }
-    
+
         const userData = new UserData()
-        const [user] = await userData.login(email);
-
-        if (!user) {
-            throw new UserNotFound()
+        const [userCNPJ ,userCPF] = await userData.login(email);
+      
+        
+        if(userCNPJ[0]){
+            let user = userCNPJ[0]
+            const passwordIsCorrect: boolean =
+              user && await this.hashmanager.compare(password, user.password);
+    
+    
+            if (!passwordIsCorrect) {
+                throw new InvalidCredentials()
+            }
+            
+    
+            const authenticator = new Authenticator()
+            const token = authenticator.generateToken({
+              id: user.id,
+              role: user.role,
+            });
+        
+            return token;
+        } else if(userCPF[0]){
+            let user = userCPF[0]
+            const passwordIsCorrect: boolean =
+              user && await this.hashmanager.compare(password, user.password);
+    
+    
+            if (!passwordIsCorrect) {
+                throw new InvalidCredentials()
+            }
+            
+    
+            const authenticator = new Authenticator()
+            const token = authenticator.generateToken({
+              id: user.id,
+              role: user.role,
+            });
+        
+            return token;
+        } else {
+            throw new Error("user doesn't exist")
         }
-    
-        const passwordIsCorrect: boolean =
-          user && await this.hashmanager.compare(password, user.password);
-
-        if (!passwordIsCorrect) {
-            throw new InvalidCredentials()
-        }
-    
-        const authenticator = new Authenticator()
-        const token = authenticator.generateToken({
-          id: user.id,
-          role: user.role,
-        });
-    
-        return token;
+        
       }
 
       async searchCompanies(token:string, category: any) {
@@ -106,7 +129,6 @@ export class UserBussines {
         const category_id = await userData.searchCategoryId(category);
         const companies = await userData.searchCompanies(category_id);
 
-        
         return companies;
       }
 }

@@ -1,5 +1,5 @@
 interface UserTypeKey {
-    [key: string]: string | number
+    [key: string]: string
 }
 
 

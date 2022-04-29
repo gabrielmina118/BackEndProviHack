@@ -5,7 +5,9 @@ Content-Type: application/json
 {
     "name":"Cassiano",
     "email":"cassiano@gmail.com",
-    "password":"123456"
+    "password":"123456",
+    "typeUser":"CNPJ"
+
 }
 
 ### Login
@@ -13,11 +15,11 @@ POST http://localhost:3003/login
 Content-Type: application/json
 
 {
-    "email":"mina@gmail.com",
-    "password":"123456"
+    "email":"xxx@gmail.com",
+    "password":"12345"
 }
 
 ### Search companies
-GET http://localhost:3003/categories:category-A
+GET http://localhost:3003/category:category-A
 Content-Type: application/json
-Authorization:
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYwNmM0YmI4LTFhYjAtNDNjYy1hNTg0LTYxYTY2MGRiNmJkZCIsImlhdCI6MTY1MTIzOTk3OCwiZXhwIjoxNjUxMzI2Mzc4fQ.GIi-NyKZoxfs-NkDF8DtML8nHXUWSNNM7SZD8_NrtJ8
