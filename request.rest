@@ -3,9 +3,11 @@ POST http://localhost:3003/user
 Content-Type: application/json
 
 {
-    "name":"Cassiano",
-    "email":"cassiano@gmail.com",
-    "password":"123456"
+    "name":"Leonardo Broca",
+    "email":"leozin@gmail.com",
+    "password":"123456",
+    "typeUser":"CPF"
+
 }
 
 ### Login
@@ -13,7 +15,7 @@ POST http://localhost:3003/login
 Content-Type: application/json
 
 {
-    "email":"mina@gmail.com",
+    "email":"leozin@gmail.com",
     "password":"123456"
 }
 

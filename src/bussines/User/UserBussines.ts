@@ -65,21 +65,21 @@ export class UserBussines {
         if (!email || !password) {
           throw new MissingFields()
         }
-    
-        const userData = new UserData()
-        const [user] = await userData.login(email);
 
-        if (!user) {
-            throw new UserNotFound()
-        }
-    
+        const userData = new UserData()
+        const [userCNPJ ,userCPF] = await userData.login(email);
+      
+        let user = userCPF[0]
+
         const passwordIsCorrect: boolean =
           user && await this.hashmanager.compare(password, user.password);
+
 
         if (!passwordIsCorrect) {
             throw new InvalidCredentials()
         }
-    
+        
+
         const authenticator = new Authenticator()
         const token = authenticator.generateToken({
           id: user.id,
@@ -105,7 +105,6 @@ export class UserBussines {
         const category_id = await userData.searchCategoryId(category);
         const companies = await userData.searchCompanies(category_id);
 
-        
         return companies;
       }
 }
