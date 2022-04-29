@@ -7,3 +7,4 @@ const userController = new UserController()
 
 userRouter.post("/user",userController.createUser)
 userRouter.post("/login",userController.login)
+userRouter.get("/category",userController.searchCompanies)

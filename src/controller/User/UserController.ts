@@ -51,5 +51,23 @@ export class UserController {
           await BaseDataBase.destroyConnection();
         }
     }
+
+    async searchCompanies(req: Request, res: Response): Promise<void> {
+        try {
+            const token = req.headers.authorization as string;
+          const category = req.params.category;
+
+          const userBussines = new UserBussines(new IdGenerator,new HashManager)
+          const result = await userBussines.searchCompanies(token, category);
+    
+          res.status(200).send({ result });
+        } catch (error: any) {
+          res.status(400).send({
+            message: error.message,
+          });
+        } finally {
+          await BaseDataBase.destroyConnection();
+        }
+    }
 }
 
