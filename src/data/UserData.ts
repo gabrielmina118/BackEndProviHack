@@ -91,17 +91,32 @@ export class UserData extends BaseDataBase {
     }
   }
 
-  public async searchCompanies(category_id: string): Promise<any> {
+  public async searchCompanies(id: string): Promise<any> {
     try {
       const result = await this.getConnection()
         .select()
         .from("company_category")
-        .where({ category_id });
-
+        .where({ category_id: id });
+    
       return result;
     } catch (error: any) {
       throw new Error(error.sqlMessage || error.message);
     }
   }
+
+  public async searchCompaniesById(id: string): Promise<any> {
+    try {
+      const result = await this.getConnection()
+        .select()
+        .from(UserData.TABLE_NAME_CNPJ)
+        .where({ id });
+    
+      return result;
+    } catch (error: any) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  
 
 }
