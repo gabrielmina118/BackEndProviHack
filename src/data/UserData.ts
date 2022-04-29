@@ -51,4 +51,30 @@ export class UserData extends BaseDataBase {
     }
   }
 
+  public async searchCategoryId(category: string): Promise<any> {
+    try {
+      const result = await this.getConnection()
+        .select("id")
+        .from("categories")
+        .where({name: category});
+
+      return result;
+    } catch (error: any) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  public async searchCompanies(category_id: string): Promise<any> {
+    try {
+      const result = await this.getConnection()
+        .select()
+        .from("company_category")
+        .where({ category_id });
+
+      return result;
+    } catch (error: any) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
 }

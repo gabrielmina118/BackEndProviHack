@@ -7,6 +7,7 @@ import { InvalidCredentials, InvalidEmail } from "../../error/invalidCredentials
 import { PasswordShort, EmailExists } from "../../error/generalError"
 import { MissingFields } from "../../error/missingFields"
 import { UserNotFound } from "../../error/notFound"
+import { MissingToken } from "../../error/missingToken"
 
 
 export class UserBussines {
@@ -83,5 +84,25 @@ export class UserBussines {
         });
     
         return token;
+      }
+
+      async searchCompanies(token:string, category: any) {
+        if (!token) {
+            throw new MissingToken()
+        }
+
+        const authenticator = new Authenticator()
+        authenticator.getData(token);
+
+        if (!category) {
+          throw new Error("Category missing")
+        }
+    
+        const userData = new UserData()
+        const category_id = await userData.searchCategoryId(category);
+        const companies = await userData.searchCompanies(category_id);
+
+        
+        return companies;
       }
 }
