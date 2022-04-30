@@ -20,6 +20,14 @@ Content-Type: application/json
 }
 
 ### Search companies
-GET http://localhost:3003/category/categoria-B
+GET http://localhost:3003/category/categoria-A
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIwMTNjLTIyZGUtNDA3MC1hYzg3LTMzNTU3MTgxZjU0NSIsImlhdCI6MTY1MTI1Njk2NiwiZXhwIjoxNjUxMzQzMzY2fQ.upn_piW0Q9pY_eqfs7dUFCIMRPTDzBifc1t03UWZtiQ
+
+### Esqueceu a senha
+PUT http://localhost:3003/newPassword
+Content-Type: application/json
+
+{
+    "email":"cassiano@gmail.com"
+}
