@@ -9,7 +9,6 @@ import { MissingFields } from "../../error/missingFields"
 import { UserNotFound } from "../../error/notFound"
 import { UserCpf } from "../../model/UserCpfModel"
 import { UserCnpj } from "../../model/UserCnpjMode"
-
 import { MissingToken } from "../../error/missingToken"
 
 
@@ -94,12 +93,10 @@ export class UserBussines {
             const passwordIsCorrect: boolean =
               user && await this.hashmanager.compare(password, user.password);
     
-    
             if (!passwordIsCorrect) {
                 throw new InvalidCredentials()
             }
             
-    
             const authenticator = new Authenticator()
             const token = authenticator.generateToken({
               id: user.id,
@@ -127,8 +124,30 @@ export class UserBussines {
     
         const userData = new UserData()
         const category_id = await userData.searchCategoryId(category);
-        const companies = await userData.searchCompanies(category_id);
 
-        return companies;
+        if(!category_id[0]){
+            throw new Error("This category doesn't exist")
+        }
+
+
+        let id = category_id[0].id
+        const companies = await userData.searchCompanies(id);
+
+        const allCompanies: Array<object> = [];
+
+        for(let obj of companies){
+            let company = await userData.searchCompaniesById(obj.company_id)
+            allCompanies.push({
+                id: company[0].id,
+                socialName: company[0].socialName,
+                email: company[0].email
+            })
+        }
+
+        if(!allCompanies[0]){
+            throw new Error("No results")
+        }
+        
+        return allCompanies;
       }
 }

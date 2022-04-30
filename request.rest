@@ -15,11 +15,11 @@ POST http://localhost:3003/login
 Content-Type: application/json
 
 {
-    "email":"xxx@gmail.com",
-    "password":"12345"
+    "email":"mina@gmail.com",
+    "password":"123456"
 }
 
 ### Search companies
-GET http://localhost:3003/category:category-A
+GET http://localhost:3003/category/categoria-B
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImYwNmM0YmI4LTFhYjAtNDNjYy1hNTg0LTYxYTY2MGRiNmJkZCIsImlhdCI6MTY1MTIzOTk3OCwiZXhwIjoxNjUxMzI2Mzc4fQ.GIi-NyKZoxfs-NkDF8DtML8nHXUWSNNM7SZD8_NrtJ8
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIwMTNjLTIyZGUtNDA3MC1hYzg3LTMzNTU3MTgxZjU0NSIsImlhdCI6MTY1MTI1Njk2NiwiZXhwIjoxNjUxMzQzMzY2fQ.upn_piW0Q9pY_eqfs7dUFCIMRPTDzBifc1t03UWZtiQ

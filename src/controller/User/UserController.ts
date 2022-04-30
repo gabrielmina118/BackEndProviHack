@@ -57,7 +57,7 @@ export class UserController {
         try {
             const token = req.headers.authorization as string;
           const category = req.params.category;
-
+          
           const userBussines = new UserBussines(new IdGenerator,new HashManager)
           const result = await userBussines.searchCompanies(token, category);
     
