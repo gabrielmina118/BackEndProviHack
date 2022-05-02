@@ -20,8 +20,8 @@ export class UserController {
                 typeUser
             }
 
-            const userBussines = new UserBussines(new IdGenerator, new HashManager)
-            const message = await userBussines.createUser(input)
+            const userBussiness = new UserBussines(new IdGenerator, new HashManager)
+            const message = await userBussiness.createUser(input)
 
             res.status(201).send({ message: message })
 
@@ -40,8 +40,8 @@ export class UserController {
         try {
             const { email, password } = req.body;
 
-            const userBussines = new UserBussines(new IdGenerator, new HashManager)
-            const token = await userBussines.login(email, password);
+            const userBussiness = new UserBussines(new IdGenerator, new HashManager)
+            const token = await userBussiness.login(email, password);
 
             res.status(200).send({ token });
         } catch (error: any) {
@@ -58,8 +58,8 @@ export class UserController {
             const token = req.headers.authorization as string;
           const category = req.params.category;
           
-          const userBussines = new UserBussines(new IdGenerator,new HashManager)
-          const result = await userBussines.searchCompanies(token, category);
+          const userBussiness = new UserBussines(new IdGenerator,new HashManager)
+          const result = await userBussiness.searchCompanies(token, category);
     
           res.status(200).send({ result });
         } catch (error: any) {
@@ -70,5 +70,22 @@ export class UserController {
           await BaseDataBase.destroyConnection();
         }
     }
+
+    async forgotPassword(req: Request, res: Response): Promise<void> {
+        try {
+          const { email } = req.body;
+
+          const userBussiness = new UserBussines(new IdGenerator,new HashManager)
+          const message = await userBussiness.forgotPassword(email);
+    
+          res.status(201).send({ message });
+        } catch (error: any) {
+          res.status(400).send({
+            message: error.message,
+          });
+        } finally {
+          await BaseDataBase.destroyConnection();
+        }
+      }
 }
 

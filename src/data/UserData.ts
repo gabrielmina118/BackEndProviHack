@@ -117,6 +117,44 @@ export class UserData extends BaseDataBase {
     }
   }
 
+  public async searchProfileByEmail(email: string): Promise<any> {
+    try {
+      const emailCPF = await this.getConnection()
+      .select()
+      .from(UserData.TABLE_NAME_CPF)
+      .where({ email });
+
+      const emailCNPJ = await this.getConnection()
+      .select()
+      .from(UserData.TABLE_NAME_CNPJ)
+      .where({ email });
+
+    return [emailCNPJ,emailCPF];
+    
+    } catch (error: any) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  public async changePassword(newPassword: string, id: string, usuario: string): Promise<void> {
+    try {
+      if(usuario === "CPF"){
+        await this.getConnection()
+        .update({ password: newPassword })
+        .where({ id: id })
+        .from(UserData.TABLE_NAME_CPF);
+      }
+      if(usuario === "CNPJ"){
+        await this.getConnection()
+        .update({ password: newPassword })
+        .where({ id: id })
+        .from(UserData.TABLE_NAME_CNPJ);
+      }
+    } catch (error: any) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
   
 
 }

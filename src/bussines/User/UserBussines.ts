@@ -10,6 +10,8 @@ import { UserNotFound } from "../../error/notFound"
 import { UserCpf } from "../../model/UserCpfModel"
 import { UserCnpj } from "../../model/UserCnpjMode"
 import { MissingToken } from "../../error/missingToken"
+import { EmailNotFound } from "../../error/notFound"
+import transporter from "../../services/Transporter";
 
 
 
@@ -149,5 +151,54 @@ export class UserBussines {
         }
         
         return allCompanies;
+      }
+
+      async forgotPassword(email: string) {
+        const userData = new UserData()
+
+        let newPass: string = "";
+
+        if (!email) {
+          throw new MissingFields()
+        }
+    
+        const [emailCNPJ, emailCPF] = await userData.searchProfileByEmail(email);
+        if (emailCNPJ) {
+            newPass = Math.random().toString(36).slice(-10);
+            await transporter.sendMail({
+              from: `<${process.env.NODEMAILER_USER}>`,
+              to: email,
+              subject: "Requisição de nova senha - Cookenu",
+              text: `Parece que você solicitou uma nova senha para sua conta no Cookenu!
+                            Sua nova senha é: ${newPass}`,
+              html: `<p>Parece que você solicitou uma nova senha para sua conta no Cookenu!
+                            Sua nova senha é: <strong>${newPass}</strong><p>`,
+            });
+            const cypherPassword: string = await this.hashmanager.hashCreate(newPass);
+            const usuario = "CNPJ"
+            await userData.changePassword(cypherPassword, emailCNPJ.id, usuario);
+        }
+        if(emailCPF){
+            newPass = Math.random().toString(36).slice(-10);
+            await transporter.sendMail({
+              from: `<${process.env.NODEMAILER_USER}>`,
+              to: email,
+              subject: "Requisição de nova senha - Cookenu",
+              text: `Parece que você solicitou uma nova senha para sua conta no Cookenu!
+                            Sua nova senha é: ${newPass}`,
+              html: `<p>Parece que você solicitou uma nova senha para sua conta no Cookenu!
+                            Sua nova senha é: <strong>${newPass}</strong><p>`,
+            });
+
+            const cypherPassword: string = await this.hashmanager.hashCreate(newPass);
+            const usuario = "CPF"
+            await userData.changePassword(cypherPassword, emailCPF.id, usuario);
+        }
+        
+        if(!emailCPF && !emailCNPJ){
+            throw new EmailNotFound()
+        }
+    
+        return "Uma nova senha foi enviada para o email informado!";
       }
 }
