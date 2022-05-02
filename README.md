@@ -1,6 +1,13 @@
 # BackEndProviHack
 Projeto BackEnd criado no ProviHack challenge.
 
+documentação da api -> https://documenter.getpostman.com/view/15065875/UyrGCZuZ
+
+## stack Usadas:
+* ![Nodejs](https://img.shields.io/badge/NodeJs-61DAFB?style=for-the-badge&logo=node&logoColor=35495E)
+* ![Typescript](https://img.shields.io/badge/Typescript-35495E?style=for-the-badge&logo=typescript&logoColor=white) 
+* ![Mysql](https://img.shields.io/badge/Mysql-E34F26?style=for-the-badge&logo=mysql&logoColor=white)
+
 
 ## Endpoints 
 * Cadastro
